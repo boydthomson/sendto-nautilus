@@ -1,18 +1,106 @@
-# Nautilus SEND-TO Extension
+# SEND-TO for File Managers
 
-A Nautilus (GNOME Files) extension that adds a powerful "SEND-TO" context menu option for quickly moving files and folders to your bookmarked locations with full subdirectory navigation.
+A powerful "SEND-TO" extension for **Nautilus** and **Thunar** file managers that lets you quickly move files and folders to your bookmarked locations with full subdirectory navigation.
 
-## Features
+## 🚀 Features
 
 - 📁 **Move files/folders** via right-click context menu
-- 🔖 **Uses Nautilus bookmarks** as destinations
+- 🔖 **Uses GTK bookmarks** as destinations (shared between apps)
 - 🌳 **Full directory tree traversal** - navigate through all subdirectories
 - 👁️ **Shows hidden folders** (those starting with `.`)
-- ⚠️ **Smart conflict handling** - Nautilus prompts you for duplicate files (Skip/Replace/Rename)
+- ⚠️ **Smart conflict handling** - prompts for duplicate files (Skip/Replace/Rename)
 - 🔒 **Safe recursion limit** - prevents excessive menu depth (max 5 levels)
+- 🖥️ **Dual support** - Works with both Nautilus (GNOME) and Thunar (XFCE)
 
-## Screenshots
+## 📦 Supported File Managers
 
+### Thunar (XFCE) - ✅ RECOMMENDED
+**Status:** Fully working, uses GTK dialog
+
+Thunar uses a custom action system that's more reliable and works on all Linux distributions.
+
+### Nautilus (GNOME Files)
+**Status:** Requires Python extension support
+
+Works on stable systems. May have issues on bleeding-edge distributions with Python 3.14+ due to `python3-nautilus` compatibility.
+
+## 🎯 Installation
+
+### For Thunar (Recommended)
+
+**Quick Install:**
+```bash
+cd sendto-nautilus
+chmod +x install-thunar.sh install-thunar-action.sh
+./install-thunar.sh
+./install-thunar-action.sh
+```
+
+**Manual Install:**
+1. Install dependencies:
+   ```bash
+   sudo apt install python3-gi gir1.2-gtk-3.0
+   ```
+
+2. Install the script:
+   ```bash
+   mkdir -p ~/.local/bin
+   cp sendto-dialog.py ~/.local/bin/sendto-dialog
+   chmod +x ~/.local/bin/sendto-dialog
+   ```
+
+3. Add to Thunar:
+   - Open Thunar
+   - Go to: **Edit → Configure custom actions**
+   - Click **+** to add new action
+   - Fill in:
+     - **Name:** SEND-TO
+     - **Description:** Move files to bookmarked locations
+     - **Command:** `sendto-dialog %F`
+   - Go to **Appearance Conditions** tab
+   - Check: **Directories** and **Other Files**
+   - Click **OK**
+
+### For Nautilus
+
+**Prerequisites:**
+```bash
+sudo apt install python3-nautilus python3-gi gir1.2-nautilus-4.1
+```
+
+**Install:**
+```bash
+cd sendto-nautilus
+chmod +x install.sh
+./install.sh
+```
+
+**Note:** Nautilus extension may not work on development/rolling release distributions with Python 3.14+ due to `python3-nautilus` compatibility issues. Use the Thunar version instead.
+
+## 🎨 Screenshots
+
+### Thunar Dialog View
+```
+┌─────────────────────────────────┐
+│ Send To                      [X]│
+├─────────────────────────────────┤
+│ Move 2 items to:                │
+│                                 │
+│ 📁 Documents                    │
+│   📁 projects                   │
+│     📁 work                     │
+│     📁 personal                 │
+│   📁 .config                    │
+│ 📁 Music                        │
+│ 📁 Pictures                     │
+│                                 │
+│ Destination: /home/user/Docs   │
+│                                 │
+│          [Cancel]  [Move Here]  │
+└─────────────────────────────────┘
+```
+
+### Nautilus Context Menu
 ```
 Right-click menu:
   ├── Cut
@@ -23,248 +111,191 @@ Right-click menu:
   │   │   ├── → (move here)
   │   │   ├── ────────────
   │   │   ├── projects/ ►
-  │   │   │   ├── → (move here)
-  │   │   │   ├── ────────────
-  │   │   │   └── work/ ►
+  │   │   │   └── → (move here)
   │   │   └── .config/ ►
   │   └── Music/ ►
-  │       └── → (move here)
   └── ...
 ```
 
-## Installation
-
-### Prerequisites
-
-**Ubuntu/Debian:**
-```bash
-sudo apt install python3-nautilus python3-gi gir1.2-nautilus-4.1
-```
-
-**For older Nautilus 3.x:**
-```bash
-sudo apt install python3-nautilus python3-gi gir1.2-nautilus-3.0
-```
-
-**Fedora/RHEL:**
-```bash
-sudo dnf install nautilus-python python3-gobject
-```
-
-### Install Extension
-
-1. Clone or download this repository:
-```bash
-cd /home/boyd/code/sendto-nautilus
-```
-
-2. Run the installation script:
-```bash
-chmod +x install.sh
-./install.sh
-```
-
-3. The script will:
-   - Check for required dependencies
-   - Copy the extension to `~/.local/share/nautilus-python/extensions/`
-   - Restart Nautilus automatically
-
-### Manual Installation
-
-If you prefer manual installation:
-
-1. Create the extension directory:
-```bash
-mkdir -p ~/.local/share/nautilus-python/extensions
-```
-
-2. Copy the extension file:
-```bash
-cp sendto_extension.py ~/.local/share/nautilus-python/extensions/
-```
-
-3. Restart Nautilus:
-```bash
-nautilus -q
-```
-
-## Usage
+## 💡 Usage
 
 ### Setting Up Bookmarks
 
-Before using the extension, add some bookmarks in Nautilus:
+Both Nautilus and Thunar use GTK bookmarks. Add bookmarks in either file manager:
 
-1. Navigate to a folder you want to bookmark
-2. Press `Ctrl+D` or use Bookmarks → Add Bookmark
-3. Your bookmarks appear in the sidebar
+**In Nautilus/Files:**
+1. Navigate to a folder
+2. Press `Ctrl+D` or use **Bookmarks → Add Bookmark**
+
+**In Thunar:**
+1. Navigate to a folder
+2. Press `Ctrl+D` or drag folder to sidebar
+
+**Manual editing:**
+Edit `~/.config/gtk-3.0/bookmarks` directly:
+```
+file:///home/user/Documents Documents
+file:///home/user/Music
+file:///home/user/Projects Work Stuff
+```
 
 ### Moving Files
 
-1. Right-click on any file or folder in Nautilus
-2. Select **SEND-TO** from the context menu
-3. Navigate through your bookmarked locations and subdirectories
-4. Click **→ (move here)** on the desired destination folder
-5. If a file with the same name exists, Nautilus will ask you to Skip/Replace/Rename
+**In Thunar:**
+1. Select one or more files/folders
+2. Right-click → **SEND-TO**
+3. Dialog opens showing bookmarks and subdirectories
+4. Select destination folder
+5. Click **Move Here**
 
-### Tips
+**In Nautilus:**
+1. Select one or more files/folders
+2. Right-click → **SEND-TO**
+3. Navigate through submenu to destination
+4. Click **→ (move here)**
 
-- **Multiple files**: Select multiple files/folders and move them all at once
-- **Hidden folders**: Folders starting with `.` are included in the menus
-- **Deep nesting**: The extension traverses up to 5 levels deep to prevent overwhelming menus
-- **Permissions**: If you can't access a folder, it won't appear in the menu
+### Command Line Usage
 
-## Uninstallation
-
-Run the uninstall script:
+You can also use the dialog script from the command line:
 ```bash
-chmod +x uninstall.sh
-./uninstall.sh
+sendto-dialog file1.txt file2.pdf /path/to/folder
 ```
 
-Or manually remove the extension:
-```bash
-rm ~/.local/share/nautilus-python/extensions/sendto_extension.py
-nautilus -q
-```
-
-## Troubleshooting
-
-### The SEND-TO menu doesn't appear
-
-1. **Check dependencies are installed:**
-```bash
-dpkg -l | grep -E 'python3-nautilus|python3-gi|gir1.2-nautilus'
-```
-
-2. **Verify extension is installed:**
-```bash
-ls -la ~/.local/share/nautilus-python/extensions/sendto_extension.py
-```
-
-3. **Restart Nautilus completely:**
-```bash
-nautilus -q
-killall nautilus
-nautilus &
-```
-
-4. **Check for errors:**
-```bash
-# Run Nautilus from terminal to see error messages
-nautilus --no-desktop 2>&1 | grep -i send
-```
-
-### Menu shows "(No bookmarks found)"
-
-- Add bookmarks in Nautilus using `Ctrl+D`
-- Check if `~/.config/gtk-3.0/bookmarks` exists and has entries
-- Only `file://` URIs are supported (local folders only, not remote SFTP/SSH)
-
-### Some folders don't appear in the menu
-
-This can happen if:
-- You don't have permission to read the folder
-- The folder is more than 5 levels deep (recursion limit)
-- The folder path contains special characters that can't be parsed
-
-### Files aren't moving
-
-- Check you have write permissions on the destination folder
-- Check the source files aren't in use by another program
-- Look for error messages in the terminal output
-
-### Extension not loading after update
-
-1. Remove cached Python bytecode:
-```bash
-rm -rf ~/.local/share/nautilus-python/extensions/__pycache__
-```
-
-2. Restart Nautilus:
-```bash
-nautilus -q
-```
-
-## Technical Details
-
-### Architecture
-
-- **Language**: Python 3
-- **APIs**: GObject, Nautilus (FileInfo, MenuProvider), Gio (File operations)
-- **Bookmark format**: GTK 3.0 bookmarks (`~/.config/gtk-3.0/bookmarks`)
-
-### File Operations
-
-The extension uses `Gio.File.move()` with no flags, which:
-- Moves files (doesn't copy)
-- Lets Nautilus handle conflict resolution
-- Maintains file metadata and permissions
-
-### Safety Features
-
-- **Recursion limit**: Maximum 5 directory levels to prevent excessive menus
-- **Permission handling**: Gracefully skips inaccessible directories
-- **Error handling**: Catches and logs errors without crashing Nautilus
-- **URL decoding**: Properly handles special characters in paths (`%20`, etc.)
-
-### Compatibility
-
-- **Nautilus 3.x**: Compatible
-- **Nautilus 4.x**: Compatible (GNOME 43+)
-- **Desktop**: GNOME, Ubuntu, other GTK-based environments
-
-## Development
-
-### Project Structure
+## 🗂️ Project Structure
 
 ```
 sendto-nautilus/
-├── sendto_extension.py  # Main extension code
-├── install.sh           # Installation script
-├── uninstall.sh         # Uninstallation script
-├── requirements.txt     # System dependencies
-└── README.md           # This file
+├── sendto_extension.py      # Nautilus Python extension
+├── sendto-dialog.py          # GTK dialog script (for Thunar)
+├── install.sh                # Nautilus installer
+├── uninstall.sh              # Nautilus uninstaller
+├── install-thunar.sh         # Thunar script installer
+├── install-thunar-action.sh  # Thunar action auto-installer
+├── requirements.txt          # System dependencies
+└── README.md                 # This file
 ```
+
+## 🔧 Troubleshooting
+
+### Thunar Issues
+
+**"SEND-TO doesn't appear in context menu"**
+- Restart Thunar: `killall thunar && thunar &`
+- Check custom actions: Edit → Configure custom actions
+- Verify script is executable: `ls -la ~/.local/bin/sendto-dialog`
+
+**"Dialog doesn't open"**
+- Test from terminal: `sendto-dialog /tmp/testfile`
+- Check dependencies: `python3 -c "import gi; gi.require_version('Gtk', '3.0'); from gi.repository import Gtk"`
+- Install GTK3: `sudo apt install python3-gi gir1.2-gtk-3.0`
+
+**"No bookmarks found"**
+- Add bookmarks in Thunar or Nautilus (Ctrl+D)
+- Check file exists: `cat ~/.config/gtk-3.0/bookmarks`
+
+### Nautilus Issues
+
+**"SEND-TO menu doesn't appear"**
+1. Check extension is installed:
+   ```bash
+   ls -la ~/.local/share/nautilus-python/extensions/sendto_extension.py
+   ```
+
+2. Restart Nautilus completely:
+   ```bash
+   nautilus -q
+   killall nautilus
+   nautilus &
+   ```
+
+3. Check for errors:
+   ```bash
+   nautilus 2>&1 | grep -i python
+   ```
+
+**"pygobject initialization failed"**
+- This is a known issue on development/bleeding-edge distributions with Python 3.14+
+- **Solution:** Use the Thunar version instead, or wait for `python3-nautilus` package updates
+
+### General Issues
+
+**"Files aren't moving"**
+- Check write permissions on destination folder
+- Ensure source files aren't in use
+- Check disk space
+
+**"Some folders don't appear"**
+- Permission issues - folders you can't read won't appear
+- Depth limit - folders beyond 5 levels deep aren't shown
+- Hidden system folders may be filtered
+
+## 🛠️ Development
 
 ### Testing
 
-1. Add test bookmarks in Nautilus
-2. Test with single and multiple files
-3. Test with files that have name conflicts
-4. Test with deeply nested directories
-5. Test with hidden folders
-6. Test with special characters in filenames
+**Test Thunar dialog:**
+```bash
+python3 sendto-dialog.py /tmp/testfile1 /tmp/testfile2
+```
 
-### Contributing
+**Test Nautilus extension:**
+```bash
+python3 -c "import sendto_extension; print('OK')"
+```
 
-Feel free to submit issues or pull requests for:
-- Bug fixes
-- Performance improvements
-- New features
-- Better error handling
-- Documentation improvements
+### Dependencies
 
-## Known Limitations
+**For Thunar:**
+- Python 3.6+
+- PyGObject (python3-gi)
+- GTK 3.0 (gir1.2-gtk-3.0)
 
-1. **Remote bookmarks**: Only local `file://` URIs are supported (no SFTP, SSH, etc.)
-2. **Performance**: Very large directory trees may cause slight lag when building menus
-3. **Depth limit**: Subdirectories beyond 5 levels deep won't appear in menus
-4. **Symlink loops**: Prevented by depth limit, but could be improved with inode tracking
+**For Nautilus:**
+- Python 3.6+
+- PyGObject (python3-gi)
+- Nautilus Python (python3-nautilus)
+- Nautilus 3.x or 4.x (gir1.2-nautilus-3.0 or gir1.2-nautilus-4.1)
 
-## License
+## 🐛 Known Limitations
 
-This extension is provided as-is for personal and educational use.
+1. **Depth limit:** Subdirectories beyond 5 levels aren't shown (prevents performance issues)
+2. **Remote bookmarks:** Only local `file://` URIs supported (no SFTP, SSH, etc.)
+3. **Nautilus on Python 3.14+:** May not work on bleeding-edge distributions due to `python3-nautilus` compatibility
+4. **Large directories:** Very large directory trees may cause slight lag when building menus
 
-## Credits
+## 📝 License
 
-Created for efficient file management in Nautilus. Inspired by the need for quick file organization using existing bookmark infrastructure.
+This project is provided as-is for personal and educational use.
 
-## Changelog
+## 🙏 Credits
+
+Created for efficient file management using GTK bookmark infrastructure. Works across GNOME, XFCE, and other GTK-based desktop environments.
+
+## 📊 Compatibility
+
+| File Manager | Status | Notes |
+|-------------|--------|-------|
+| Thunar      | ✅ Works | Recommended - uses custom actions |
+| Nautilus 3.x | ✅ Works | On stable distributions |
+| Nautilus 4.x | ⚠️ Limited | May fail on Python 3.14+ systems |
+| Nemo        | ❓ Untested | May work with Nautilus extension |
+| Caja        | ❓ Untested | May work with custom actions |
+
+## 🔗 Links
+
+- GitHub: https://github.com/boydthomson/sendto-nautilus
+- Issues: https://github.com/boydthomson/sendto-nautilus/issues
+
+## 📜 Changelog
+
+### Version 1.1.0
+- Added Thunar support with GTK dialog
+- Created standalone dialog script
+- Improved compatibility across distributions
 
 ### Version 1.0.0 (Initial Release)
-- Basic SEND-TO context menu
+- Nautilus Python extension
 - GTK bookmark integration
 - Recursive directory traversal (max depth 5)
 - Hidden folder support
-- Move operation with conflict handling
 - Installation/uninstallation scripts

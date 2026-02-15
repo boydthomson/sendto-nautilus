@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Nautilus SEND-TO Extension
 Adds a context menu to move files/folders to bookmarked locations with full subdirectory traversal.
