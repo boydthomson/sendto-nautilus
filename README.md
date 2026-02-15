@@ -38,7 +38,7 @@ Right-click menu:
 
 **Ubuntu/Debian:**
 ```bash
-sudo apt install python3-nautilus python3-gi gir1.2-nautilus-4.0
+sudo apt install python3-nautilus python3-gi gir1.2-nautilus-4.1
 ```
 
 **For older Nautilus 3.x:**

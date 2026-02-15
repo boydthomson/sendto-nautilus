@@ -32,10 +32,10 @@ if ! dpkg -l | grep -q python3-gi; then
     MISSING_PACKAGES+=("python3-gi")
 fi
 
-# Check for Nautilus 4.0 or 3.0
-if ! dpkg -l | grep -q "gir1.2-nautilus-4.0"; then
+# Check for Nautilus 4.x or 3.0
+if ! dpkg -l | grep -q "gir1.2-nautilus-4"; then
     if ! dpkg -l | grep -q "gir1.2-nautilus-3.0"; then
-        MISSING_PACKAGES+=("gir1.2-nautilus-4.0 (or gir1.2-nautilus-3.0)")
+        MISSING_PACKAGES+=("gir1.2-nautilus-4.1 (or gir1.2-nautilus-3.0)")
     fi
 fi
 
@@ -46,7 +46,7 @@ if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
     done
     echo
     echo "Install them with:"
-    echo -e "${GREEN}sudo apt install python3-nautilus python3-gi gir1.2-nautilus-4.0${NC}"
+    echo -e "${GREEN}sudo apt install python3-nautilus python3-gi gir1.2-nautilus-4.1${NC}"
     echo
     read -p "Continue anyway? (y/N) " -n 1 -r
     echo

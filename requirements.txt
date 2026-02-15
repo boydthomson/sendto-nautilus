@@ -3,7 +3,7 @@
 
 python3-nautilus     # Nautilus Python bindings
 python3-gi           # GObject Introspection bindings for Python
-gir1.2-nautilus-4.0  # Nautilus 4.x typelib (use gir1.2-nautilus-3.0 for older versions)
+gir1.2-nautilus-4.1  # Nautilus 4.x typelib (use gir1.2-nautilus-3.0 for older versions)
 
 # Note: These are system packages, not pip packages
 # They must be installed via your system package manager (apt, dnf, etc.)
